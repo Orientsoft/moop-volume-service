@@ -82,7 +82,7 @@ pvcTemplate:
 
 ## K8S namespace
 
-**After creating tenant, please create a k8s namespace with tenant.id.**  
+**After creating tenant, please create a k8s namespace with tenant.namespace.**  
 
 ## envs
 
@@ -92,7 +92,7 @@ default ```env.sh```:
 export LOG_LEVEL=10 # debug
 export TENANT_SERVICE_URL='http://192.168.0.48:7778/service/api/v1/tenants'
 export NFS_SERVER="192.168.0.31"
-export NFS_PREFIX="/nfs/"
+export NFS_PREFIX="/opt/nfsshare/"
 ```
 
 ## dev start
