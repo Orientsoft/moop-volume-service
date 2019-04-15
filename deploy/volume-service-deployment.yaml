@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volume-service
+  # namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moop
+      service: volume-service
+  template:
+    metadata:
+      labels:
+        app: moop
+        service: volume-service
+    spec:
+      containers:
+      - name: moop-volume-service
+        image: registry.datadynamic.io/moop/moop-volume-service:20190415
+        volumeMounts:
+        - name:  volume-service-config
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+
+      imagePullSecrets:
+      - name: regcred
+
+      volumes:
+      - name:  volume-service-config
+        configMap:
+          name: volume-service-config
