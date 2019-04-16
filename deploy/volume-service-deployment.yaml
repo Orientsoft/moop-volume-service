@@ -18,11 +18,20 @@ spec:
     spec:
       containers:
       - name: moop-volume-service
-        image: registry.datadynamic.io/moop/moop-volume-service:20190415
+        image: registry.datadynamic.io/moop/moop-volume-service:4fc8a3d
         volumeMounts:
         - name:  volume-service-config
           mountPath: /app/config.yaml
           subPath: config.yaml
+
+        resources: {}
+          # requests:
+          #   memory: 32Mi
+          #   cpu: 40m
+          # limits:
+          #   memory: 2Gi
+          #   cpu: 1
+
 
       imagePullSecrets:
       - name: regcred

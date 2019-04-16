@@ -6,16 +6,12 @@ metadata:
 
 data:
     config.yaml: |-
-      config:
-        HOST:
-          '0.0.0.0'
-        PORT:
-          7778
-        DEBUG:
-          true
-        SECRET_KEY:
-          'abcdefg'
-        MONGODB_URL:
-          'mongodb://mongodb.database.svc:27017/MOOP_SERVICE'
-        LOG_FORMAT:
-          '%(asctime)s - %(filename)s:%(lineno)s - %(name)s:%(funcName)s - [%(levelname)s] %(message)s'
+      host: '0.0.0.0'
+      port: 5010
+      in_cluster: true
+      debug: true
+      # 10 - debug
+      log_level: 10
+      tenant_service_url: 'http://tenant-service/service/v1/tenants'
+      nfs_server: '192.168.0.31'
+      nfs_prefix: '/opt/minio-root/'
