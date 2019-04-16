@@ -84,22 +84,24 @@ pvcTemplate:
 
 **After creating tenant, please create a k8s namespace with tenant.namespace.**  
 
-## envs
-
-default ```env.sh```:  
-
-```sh
-export LOG_LEVEL=10 # debug
-export TENANT_SERVICE_URL='http://192.168.0.48:7778/service/api/v1/tenants'
-export NFS_SERVER="192.168.0.31"
-export NFS_PREFIX="/opt/nfsshare/"
+## config.yaml
+Please place config.yaml under root path of volume service.  
+config.yaml example:  
+```yaml
+host: '0.0.0.0'
+port: 5010
+debug: true
+# 10 - debug
+log_level: 10
+tenant_service_url: 'http://192.168.0.48:7778/service/v1/tenants'
+nfs_server: '192.168.0.31'
+nfs_prefix: '/opt/minio-root/'
 ```
 
 ## dev start
 
 ```sh
-source ./env.sh
-FLASK_APP=./volume-service.py flask run -h 0.0.0.0 -p 5010
+python ./volume-service.py
 ```
 
 ## API

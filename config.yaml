@@ -1,0 +1,8 @@
+host: '0.0.0.0'
+port: 5010
+debug: true
+# 10 - debug
+log_level: 10
+tenant_service_url: 'http://192.168.0.48:7778/service/v1/tenants'
+nfs_server: '192.168.0.31'
+nfs_prefix: '/opt/minio-root/'

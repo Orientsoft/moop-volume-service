@@ -15,16 +15,34 @@ from kubernetes.client.rest import ApiException
 
 import requests
 from flask import Flask, redirect, request, Response
-
-# envs
-LOG_LEVEL = int(os.getenv('LOG_LEVEL', ''))
-TENANT_SERVICE_URL = os.environ.get('TENANT_SERVICE_URL', '/').strip()
-NFS_SERVER = os.environ.get('NFS_SERVER', '/').strip()
-NFS_PREFIX = os.environ.get('NFS_PREFIX', '/').strip()
+import yaml
 
 # consts
 SERVICE_PREFIX = '/volumes'
 API_VERSION = 'service/v1'
+
+CONFIG_PATH = './config.yaml'
+
+with open(CONFIG_PATH) as config_file:
+    config_str = config_file.read()
+    configs = yaml.load(config_str)
+
+    LOG_LEVEL = configs['log_level']
+    TENANT_SERVICE_URL = configs['tenant_service_url']
+    NFS_SERVER = configs['nfs_server']
+    NFS_PREFIX = configs['nfs_prefix']
+
+    HOST = configs['host']
+    PORT = configs['port']
+    DEBUG = configs['debug']
+
+# envs
+'''
+LOG_LEVEL = int(os.getenv('LOG_LEVEL', ''))
+TENANT_SERVICE_URL = os.environ.get('TENANT_SERVICE_URL', '/').strip()
+NFS_SERVER = os.environ.get('NFS_SERVER', '/').strip()
+NFS_PREFIX = os.environ.get('NFS_PREFIX', '/').strip()
+'''
 
 # logger
 LOG_NAME = 'Volume-Service'
@@ -381,3 +399,12 @@ def remove_pvc(tenant, username, tag, namespace=''):
             status=500,
             mimetype='application/json'
         )
+
+if __name__ == '__main__':
+    logger.debug('configs: {}'.format(configs))
+    app.run(
+        debug=DEBUG,
+        host=HOST,
+        port=PORT,
+        threaded=True
+    )
