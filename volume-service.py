@@ -35,6 +35,7 @@ with open(CONFIG_PATH) as config_file:
     HOST = configs['host']
     PORT = configs['port']
     DEBUG = configs['debug']
+    IN_CLUSTER = configs['in_cluster']
 
 # envs
 '''
@@ -66,8 +67,11 @@ def datetime_convertor(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
 
-# load kube config from .kube
-config.load_kube_config()
+if IN_CLUSTER:
+    config.load_incluster_config()
+else:
+    # load kube config from .kube
+    config.load_kube_config()
 
 # create an instance of the API class
 api_instance = kubernetes.client.CoreV1Api()
