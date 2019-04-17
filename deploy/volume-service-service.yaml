@@ -6,10 +6,10 @@ metadata:
 spec:
   ports:
   - name: volume-service-http
-    nodePort: 31010
+    nodePort: 31780
     port: 80
     protocol: TCP
-    targetPort: 5010
+    targetPort: 80
   selector:
     app: moop
     service: volume-service
