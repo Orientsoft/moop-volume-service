@@ -12,7 +12,7 @@ FROM base
 COPY --from=builder /install /usr/local
 WORKDIR /app
 # COPY application ./application
-COPY volume-service.py ./
+COPY * ./
 # COPY config.yaml .
 
 CMD [ "python", "volume-service.py" ]
