@@ -11,8 +11,9 @@ RUN pip install --install-option="--prefix=/install" -r /requirements.txt
 FROM base
 COPY --from=builder /install /usr/local
 WORKDIR /app
+COPY . .
 # COPY application ./application
-COPY volume-service.py ./
+# COPY volume-service.py ./
 # COPY config.yaml .
 
 CMD [ "python", "volume-service.py" ]
