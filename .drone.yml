@@ -1,0 +1,34 @@
+kind: pipeline
+name: moop-volume-service-ci
+
+steps:
+
+- name: build-image
+  image: plugins/docker
+  settings:
+    repo: registry.datadynamic.io/moop/moop-volume-service
+    registry: registry.datadynamic.io
+    tags: "${DRONE_TAG}"
+    # tags: "${DRONE_COMMIT}"
+    username:
+      from_secret: repo-username
+    password:
+      from_secret: repo-password
+  when:
+    event:
+    - tag
+
+- name: k8s-deploy
+  image: quay.io/honestbee/drone-kubernetes
+  settings:
+    kubernetes_server: https://192.168.0.31:6443
+    kubernetes_token: 
+      from_secret: kube-token
+    namespace: moop-dev
+    deployment: volume-service
+    repo: registry.datadynamic.io/moop/moop-volume-service
+    container: moop-volume-service
+    tag: "${DRONE_TAG}"
+  when:
+    event:
+    - tag
