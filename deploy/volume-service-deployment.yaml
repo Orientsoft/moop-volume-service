@@ -16,9 +16,11 @@ spec:
         app: moop
         service: volume-service
     spec:
+      serviceAccountName: moop
+
       containers:
       - name: moop-volume-service
-        image: registry.datadynamic.io/moop/moop-volume-service:{IMAGE_TAG_for_change}
+        image: registry.datadynamic.io/moop/moop-volume-service:61a40bd
         volumeMounts:
         - name:  volume-service-config
           mountPath: /app/config.yaml
