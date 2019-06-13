@@ -114,7 +114,7 @@ def create_body(f):
 
         # read templates from tenant service
         tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, req_body['tenant']),
-                                   headers={'moopkey': app.config['MOOPKEY']})
+                                   headers={'moopkey': MOOPKEY})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp.json(), traceback.format_exc()))
             return Response(
@@ -180,7 +180,7 @@ def get_params(f):
 
         # read name from tenant service
         tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, params['tenant']),
-                                   headers={'moopkey': app.config['MOOPKEY']})
+                                   headers={'moopkey': MOOPKEY})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp, traceback.format_exc()))
             return Response(
