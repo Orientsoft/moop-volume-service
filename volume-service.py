@@ -31,6 +31,7 @@ with open(CONFIG_PATH) as config_file:
     TENANT_SERVICE_URL = configs['tenant_service_url']
     NFS_SERVER = configs['nfs_server']
     NFS_PREFIX = configs['nfs_prefix']
+    MOOPKEY = configs['MOOPKEY']
 
     HOST = configs['host']
     PORT = configs['port']
