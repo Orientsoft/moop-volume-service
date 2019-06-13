@@ -12,7 +12,7 @@ data:
       debug: true
       # 10 - debug
       log_level: 10
-      tenant_service_url: 'http://tenant-service/service/v1/tenants'
+      tenant_service_url: 'http://192.168.0.34:32280/services/v1/tenant'
       nfs_server: '192.168.0.31'
       nfs_prefix: '/opt/minio-root/'
       MOOPKEY: 'faf23ej21fklajfla'
