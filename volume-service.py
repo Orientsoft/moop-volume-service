@@ -49,6 +49,7 @@ NFS_PREFIX = os.environ.get('NFS_PREFIX', '/').strip()
 LOG_NAME = 'Volume-Service'
 LOG_FORMAT = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s:%(funcName)s - [%(levelname)s] %(message)s'
 
+
 def setup_logger(level):
     handler = logging.StreamHandler(stream=sys.stdout)
     formatter = logging.Formatter(LOG_FORMAT)
@@ -60,12 +61,15 @@ def setup_logger(level):
 
     return logger
 
+
 logger = setup_logger(int(LOG_LEVEL))
+
 
 # helper
 def datetime_convertor(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
+
 
 if IN_CLUSTER:
     config.load_incluster_config()
@@ -77,6 +81,7 @@ else:
 api_instance = kubernetes.client.CoreV1Api()
 
 app = Flask(__name__)
+
 
 def create_body(f):
     @wraps(f)
@@ -107,7 +112,8 @@ def create_body(f):
         match = req_body['match'] if 'match' in req_body.keys() else False
 
         # read templates from tenant service
-        tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, req_body['tenant']))
+        tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, req_body['tenant']),
+                                   headers={'moopkey': app.config['MOOPKEY']})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp.json(), traceback.format_exc()))
             return Response(
@@ -125,20 +131,24 @@ def create_body(f):
 
             body['metadata']['name'] = body['metadata']['name'].format(req_body['tenant'], req_body['username'], tag)
             body['metadata']['namespace'] = namespace
-            body['metadata']['labels']['pv'] = body['metadata']['labels']['pv'].format(req_body['tenant'], req_body['username'], tag)
+            body['metadata']['labels']['pv'] = body['metadata']['labels']['pv'].format(req_body['tenant'],
+                                                                                       req_body['username'], tag)
             body['spec']['nfs']['server'] = body['spec']['nfs']['server'].format(NFS_SERVER)
             body['spec']['nfs']['path'] = body['spec']['nfs']['path'].format(NFS_PREFIX, req_body['path'])
         else:
             if match:
                 body = templates['match_pvc']
 
-                body['metadata']['name'] = body['metadata']['name'].format(req_body['tenant'], req_body['username'], tag)
+                body['metadata']['name'] = body['metadata']['name'].format(req_body['tenant'], req_body['username'],
+                                                                           tag)
                 body['metadata']['namespace'] = namespace
-                body['spec']['selector']['matchLabels']['pv'] = body['spec']['selector']['matchLabels']['pv'].format(req_body['tenant'], req_body['username'], tag)
+                body['spec']['selector']['matchLabels']['pv'] = body['spec']['selector']['matchLabels']['pv'].format(
+                    req_body['tenant'], req_body['username'], tag)
             else:
                 body = templates['pvc']
 
-                body['metadata']['name'] = body['metadata']['name'].format(req_body['tenant'], req_body['username'], tag)
+                body['metadata']['name'] = body['metadata']['name'].format(req_body['tenant'], req_body['username'],
+                                                                           tag)
                 body['metadata']['namespace'] = namespace
 
         return f(
@@ -148,6 +158,7 @@ def create_body(f):
         )
 
     return decorated
+
 
 def get_params(f):
     @wraps(f)
@@ -167,7 +178,8 @@ def get_params(f):
         tag = params['tag'] if 'tag' in params.keys() else 'default'
 
         # read name from tenant service
-        tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, params['tenant']))
+        tenant_resp = requests.get('{}/{}'.format(TENANT_SERVICE_URL, params['tenant']),
+                                   headers={'moopkey': app.config['MOOPKEY']})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp, traceback.format_exc()))
             return Response(
@@ -185,6 +197,7 @@ def get_params(f):
         )
 
     return decorated
+
 
 # POST /pvs
 @app.route('/{}{}/pvs'.format(API_VERSION, SERVICE_PREFIX), methods=['POST'])
@@ -224,6 +237,7 @@ def create_pv(body):
             mimetype='application/json'
         )
 
+
 # GET /pvs
 @app.route('/{}{}/pvs'.format(API_VERSION, SERVICE_PREFIX), methods=['GET'])
 @get_params
@@ -262,6 +276,7 @@ def read_pv(tenant, username, tag, namespace=''):
             mimetype='application/json'
         )
 
+
 # DELETE /pvs
 @app.route('/{}{}/pvs'.format(API_VERSION, SERVICE_PREFIX), methods=['DELETE'])
 @get_params
@@ -291,6 +306,7 @@ def remove_pv(tenant, username, tag, namespace=''):
             status=500,
             mimetype='application/json'
         )
+
 
 # POST /pvcs
 @app.route('/{}{}/pvcs'.format(API_VERSION, SERVICE_PREFIX), methods=['POST'])
@@ -332,6 +348,7 @@ def create_pvc(body):
             mimetype='application/json'
         )
 
+
 # GET /pvcs
 @app.route('/{}{}/pvcs'.format(API_VERSION, SERVICE_PREFIX), methods=['GET'])
 @get_params
@@ -371,6 +388,7 @@ def read_pvc(tenant, username, tag, namespace=''):
             mimetype='application/json'
         )
 
+
 # DELETE /pvcs
 @app.route('/{}{}/pvcs'.format(API_VERSION, SERVICE_PREFIX), methods=['DELETE'])
 @get_params
@@ -403,6 +421,7 @@ def remove_pvc(tenant, username, tag, namespace=''):
             status=500,
             mimetype='application/json'
         )
+
 
 if __name__ == '__main__':
     logger.debug('configs: {}'.format(configs))

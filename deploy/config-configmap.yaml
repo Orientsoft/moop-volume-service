@@ -15,3 +15,4 @@ data:
       tenant_service_url: 'http://tenant-service/service/v1/tenants'
       nfs_server: '192.168.0.31'
       nfs_prefix: '/opt/minio-root/'
+      MOOPKEY: 'faf23ej21fklajfla'
