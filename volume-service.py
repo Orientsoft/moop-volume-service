@@ -89,7 +89,6 @@ def create_body(f):
     def decorated(*args, **kwargs):
         # parameters
         req_body = request.get_json()
-
         # get request resource type
         url_array = request.url.strip('/').split('/')
         resource_type = url_array[-1]
