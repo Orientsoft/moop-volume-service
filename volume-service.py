@@ -112,7 +112,7 @@ def create_body(f):
         match = req_body['match'] if 'match' in req_body.keys() else False
 
         # read templates from tenant service
-        tenant_resp = requests.get('{}/{}/{}'.format(TENANT_SERVICE_URL, '/tenants', req_body['tenant']),
+        tenant_resp = requests.get('{}/{}/{}'.format(TENANT_SERVICE_URL, 'tenants', req_body['tenant']),
                                    headers={'moopkey': MOOPKEY})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp.json(), traceback.format_exc()))
@@ -178,7 +178,7 @@ def get_params(f):
         tag = params['tag'] if 'tag' in params.keys() else 'default'
 
         # read name from tenant service
-        tenant_resp = requests.get('{}/{}/{}'.format(TENANT_SERVICE_URL, '/tenants', params['tenant']),
+        tenant_resp = requests.get('{}/{}/{}'.format(TENANT_SERVICE_URL, 'tenants', params['tenant']),
                                    headers={'moopkey': MOOPKEY})
         if tenant_resp.status_code != 200:
             logger.error('Request Error: {}\nStack: {}\n'.format(tenant_resp, traceback.format_exc()))
